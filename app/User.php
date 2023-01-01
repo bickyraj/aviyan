@@ -5,10 +5,14 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Auth;
 
 class User extends Authenticatable
 {
     use Notifiable;
+
+    const ADMIN_ROLE = 1;
+    const USER_ROLE = 2;
 
     /**
      * The attributes that are mass assignable.
@@ -36,4 +40,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function isAdmin(): bool
+    {
+        if (Auth::user()->role_id == self::ADMIN_ROLE) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isUser(): bool
+    {
+        if (Auth::user()->role_id == self::USER_ROLE) {
+            return true;
+        }
+        return false;
+    }
 }

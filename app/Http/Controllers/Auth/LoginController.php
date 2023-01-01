@@ -27,7 +27,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    // protected $redirectTo;
 
     /**
      * Create a new controller instance.
@@ -42,10 +42,12 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         if (Auth::user()->isAdmin()) {
-            return '/admin';
+            return redirect()->route('admin.dashboard');
+        } else {
+            return redirect()->route('user.dashboard');
         }
-        
-        return '/login';
+
+        // return '/login';
     }
 
     public function login(Request $request)
@@ -60,17 +62,15 @@ class LoginController extends Controller
         $password = $request->password;
 
         if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            //user sent their email 
-            Auth::attempt(['email' => $email, 'password' => $password, 'role_id' => 1], $request->remember);
+            //user sent their email
+            Auth::attempt(['email' => $email, 'password' => $password], $request->remember);
         } else {
-            //they sent their username instead 
-            Auth::attempt(['username' => $email, 'password' => $password, 'role_id' => 1], $request->remember);
+            //they sent their username instead
+            Auth::attempt(['username' => $email, 'password' => $password], $request->remember);
         }
 
-        // check if user is authenticated.
-        if ( Auth::check() ) {
-            //redirect to dashboard. 
-            return redirect()->intended(route('admin.dashboard'));
+        if (Auth::check()) {
+            return $this->redirectTo();
         }
 
         return redirect()->back()->with('error', 'Username or password incorrect.')->withInput($request->only('email', 'remember'));

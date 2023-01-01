@@ -236,6 +236,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 	Route::post('/admin-setting', 'UserController@updateSetting')->name('user-setting.update');
 });
 
+Route::group(
+    ['prefix' => 'user', 'namespace' => 'User', 'middleware' => ['web', 'user']],
+    function () {
+        Route::get('/dashboard', 'DashboardController@dashboard')->name('user.dashboard');
+    }
+);
+
 // front routes
 Route::get('/system-clear-cache', function() {
     // Artisan::call('optimize:clear');
