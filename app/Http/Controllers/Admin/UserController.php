@@ -80,6 +80,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'citizenship_no' => 'required',
             'email' => 'required|email|unique:users,email',
             'no_of_shares' => 'required|numeric',
             'invested_amount' => 'required|numeric',
@@ -136,15 +137,26 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'name' => 'required'
+            'name' => 'required',
+            'citizenship_no' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'no_of_shares' => 'required|numeric',
+            'invested_amount' => 'required|numeric',
+            'dob' => 'date'
         ]);
 
         $status = 0;
         $msg = "";
         $user = User::find($request->id);
         $user->name = $request->name;
-        $user->slug = $this->create_slug_title($user->name);
-        $user->status = 1;
+        $user->address = $request->address;
+        $user->dob = $request->dob;
+        $user->citizenship_no = $request->citizenship_no;
+        $user->occupation = $request->occupation;
+        $user->email = $request->email;
+        $user->mobile = $request->mobile;
+        $user->no_of_shares = $request->no_of_shares;
+        $user->invested_amount = $request->invested_amount;
 
         if ($user->save()) {
             $status = 1;
@@ -172,7 +184,7 @@ class UserController extends Controller
         $path = 'public/users/';
 
         if (User::find($id)->delete()) {
-            Storage::deleteDirectory($path . $id);
+            // Storage::deleteDirectory($path . $id);
             $status = 1;
             $http_status_code = 200;
             $msg = "User has been deleted";

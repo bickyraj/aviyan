@@ -62,19 +62,19 @@
         <div class="col">
             <!--begin::Portlet-->
             <div class="kt-portlet">
-                <form class="kt-form" id="add-form-team" enctype="multipart/form-data">
-                    <input type="hidden" name="id" value="{{ $team->id }}">
+                <form class="kt-form" id="add-form-user" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="{{ $user->id }}">
                     <div class="kt-portlet__head">
                         <div class="kt-portlet__head-label">
                           <span class="kt-portlet__head-icon">
                               <i class="kt-font-brand flaticon-edit-1"></i>
                           </span>
                             <h3 class="kt-portlet__head-title">
-                                Edit Team
+                                Edit User
                             </h3>
                         </div>
                         <div class="kt-form__actions mt-3">
-                            <a href="{{ route('admin.teams.index') }}" class="btn btn-sm btn-secondary">Cancel</a>
+                            <a href="{{ route('admin.users.index') }}" class="btn btn-sm btn-secondary">Cancel</a>
                             <button type="submit" class="btn btn-sm btn-primary">
                               <i class="flaticon2-check-mark"></i>
                             Update
@@ -86,7 +86,46 @@
                     <div class="kt-portlet__body">
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" value="{{ $team->name }}" name="name" class="form-control" aria-describedby="" placeholder="Name" required>
+                            <input type="text" value="{{ $user->name }}" name="name" class="form-control" aria-describedby="" placeholder="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" name="address" value="{{ $user->address }}" class="form-control" aria-describedby="" placeholder="" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>DOB</label>
+                            <input type="date" name="dob" value="{{ $user->dob }}" class="form-control" aria-describedby="" placeholder="" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Citizenship Number</label>
+                            <input type="text" name="citizenship_no" value="{{ $user->citizenship_no }}" class="form-control" aria-describedby="" placeholder="" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Occupation</label>
+                            <input type="text" name="occupation" value="{{ $user->occupation }}" class="form-control" aria-describedby="" placeholder="" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="email" value="{{ $user->email }}" class="form-control" aria-describedby="" placeholder="" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mobile</label>
+                            <input type="text" name="mobile" value="{{ $user->mobile }}" class="form-control" aria-describedby="" placeholder="" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Number of Shares</label>
+                            <input type="number" name="no_of_shares" value="{{ $user->no_of_shares }}" class="form-control" aria-describedby="" placeholder="" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Invested Amount</label>
+                            <input type="text" name="invested_amount" value="{{ $user->invested_amount }}" class="form-control" aria-describedby="" placeholder="" required>
                         </div>
                     </div>
                     <div class="kt-portlet__foot">
@@ -113,19 +152,19 @@
 <script src="./assets/vendors/jquery-validation/dist/jquery.validate.min.js"></script>
 <script type="text/javascript">
 $(function() {
-  $("#add-form-team").validate({
+  var formValidator = $("#add-form-user").validate({
     submitHandler: function(form, event) {
       event.preventDefault();
       var btn = $(form).find('button[type=submit]').attr('disabled', true).html('Publishing...');
-      handleTeamForm(form);
+      handleUserForm(form);
     }
   });
 
-  function handleTeamForm(form) {
+  function handleUserForm(form) {
     var form = $(form);
     var formData = new FormData(form[0]);
     $.ajax({
-        url: "{{ route('admin.teams.update') }}",
+        url: "{{ route('admin.users.update') }}",
         type: 'POST',
         data: formData,
         dataType: 'json',
@@ -134,8 +173,18 @@ $(function() {
         async: false,
         success: function(res) {
             if (res.status === 1) {
-                location.href = '{{ route("admin.teams.index") }}';
+                location.href = '{{ route("admin.users.index") }}';
             }
+        },
+        error: function(err) {
+            if (err.responseJSON.errors) {
+                for(const [i, v] of Object.entries(err.responseJSON.errors)) {
+                    formValidator.showErrors({
+                        [i]: v[0]
+                    });
+                }
+            }
+            $("#add-form-user").find('button[type=submit]').attr('disabled', false).html('Publish');
         }
     });
   }
