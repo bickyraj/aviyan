@@ -76,6 +76,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 	Route::get('team/members/{id}', 'TeamController@teamMembers')->name('teams.members');
     Route::get('team/members/{id}/list', 'TeamController@teamMemberList');
 
+    Route::get('users', 'UserController@index')->name('users.index');
+    Route::get('users/edit/{id}', 'UserController@edit')->name('users.edit');
+    Route::post('users/update', 'UserController@update')->name('users.update');
+    Route::get('users/add', 'UserController@create')->name('users.add');
+    Route::get('users/list', 'UserController@userList');
+    Route::post('users', 'UserController@store')->name('users.store');
+    Route::delete('users/delete/{id}', 'UserController@destroy')->name('users.delete');
+    // Route::get('team/members/{id}', 'TeamController@teamMembers')->name('users.members');
+    // Route::get('team/members/{id}/list', 'TeamController@teamMemberList');
+
     // route-team-members
     // Route::get('team/{id}/members', 'TeamMemberController@index')->name('team-members.index');
     Route::get('team/members/{id}/edit', 'TeamMemberController@edit')->name('team-members.edit');
