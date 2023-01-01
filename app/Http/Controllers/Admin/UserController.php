@@ -100,12 +100,24 @@ class UserController extends Controller
         $user->mobile = $request->mobile;
         $user->no_of_shares = $request->no_of_shares;
         $user->invested_amount = $request->invested_amount;
-        $user->password = bcrypt($this->randomPassword());
+        $password = $this->randomPassword();
+        $user->password = bcrypt($password);
         // $user->slug = $this->create_slug_title($user->name);
 
         if ($user->save()) {
             $status = 1;
             $msg = "User created successfully.";
+            // sent email
+            \Mail::send('emails.register', ['body' => [
+                    'email' => $user->email,
+                    'url' => route('admin.login'),
+                    'name' => $user->name,
+                    'password' => $password,
+                ]], function ($message) use ($user) {
+                $message->to($user->email);
+                $message->from(\Setting::get('email'));
+                $message->subject('Aviyaan Group Registration');
+            });
             session()->flash('message', $msg);
         }
 
