@@ -3,8 +3,8 @@
 use Illuminate\Support\Str;
 
 if (!function_exists('truncate')) {
-    function truncate ($data) {
-    	return Str::limit($data, 150, '...');
+    function truncate ($data, $limit = 150) {
+    	return Str::limit($data, $limit, '...');
     }
 }
 

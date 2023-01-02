@@ -258,6 +258,10 @@ Route::group(
     ['prefix' => 'user', 'namespace' => 'User', 'middleware' => ['web', 'user']],
     function () {
         Route::get('/dashboard', 'DashboardController@dashboard')->name('user.dashboard');
+        // routes-news-events
+        Route::get('/news', 'NewsEventController@index')->name('user.news.index');
+        Route::get('/news/{slug}', 'NewsEventController@show')->name('user.news.show');
+        // Route::get('news/list', 'NewsEventController@newsList');
     }
 );
 
