@@ -15,16 +15,24 @@ Route::get('/', 'Front\HomeController@index')->name('home');
 
 Route::get('mycms', function() {
 	if (auth()->check()) {
-		return redirect()->route('admin.dashboard');
+        if (auth()->user()->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        } else {
+            return redirect()->route('user.dashboard');
+        }
 	}
 	return view('admin_login');
 })->name('admin.login');
 
+Route::get('login', function() {
+    return redirect()->route('admin.login');
+})->name('login');
 Route::post('login', 'Auth\LoginController@login')->name('auth.login');
 Route::get('logout', 'Auth\LoginController@logout')->name('auth.logout');
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['web', 'admin']], function ()
 {
+    Route::get('/', 'DashboardController@dashboard')->name('dashboard');
 	Route::get('/dashboard', 'DashboardController@dashboard')->name('dashboard');
 
 	Route::get('pages', 'PageController@index')->name('pages.index');
